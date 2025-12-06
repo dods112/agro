@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
-# CORS - allows your GitHub Pages to connect
+# CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -16,4 +16,25 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Your routes below...
+# ADD YOUR ROUTES HERE:
+
+@app.get("/")
+def read_root():
+    return {"message": "Welcome to AgroWeather API", "status": "online"}
+
+@app.post("/login")
+def login(username: str, password: str):
+    # Your login logic here
+    return {"message": "Login endpoint"}
+
+@app.post("/register")
+def register():
+    # Your registration logic here
+    return {"message": "Register endpoint"}
+
+@app.get("/dashboard")
+def dashboard():
+    # Your dashboard logic here
+    return {"message": "Dashboard endpoint"}
+
+# Add more routes as needed...
