@@ -1,0 +1,5 @@
+cd "C:\Users\dodsd\Desktop\AgroWeather\agroweather\backend"
+
+    uvicorn agroweather_backend:app --host 0.0.0.0 --port 8000 --reload
+
+if we connect on device make sure the ip address is the same hehe
