@@ -3178,6 +3178,24 @@ display: block !important;
 }
 
 /* Welcome page hidden by default */
+
+#welcomePage {
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+#welcomePage:hover {
+  transform: scale(1.02);
+}
+
+#welcomePage:hover h1 {
+  color: var(--primary-light);
+}
+
+#welcomePage:hover .tagline {
+  color: var(--text);
+}
+
 #welcomePage {
 display: none !important;
 }
