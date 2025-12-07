@@ -2496,10 +2496,9 @@ submitBtn.innerHTML = originalText;
 
 <!-- Dashboard Screen -->
 <audio id="bgAudio" loop preload="metadata" aria-hidden="true">
-<source src="https://cdn.pixabay.com/audio/2022/03/10/audio_2c95b5207c.mp3" type="audio/mpeg">
-<!-- Enhanced Floating Music Controls -->
-<button id="musicFloatingBtn" onclick="toggleMusicPanel()" style="position: fixed; bottom: 20px; right: 20px; z-index: 9998; width: 56px; height: 56px; border-radius: 50%; background: var(--primary); border: none; box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4); cursor: pointer; display: none; align-items: center; justify-content: center; font-size: 1.5rem; transition: all 0.3s ease;">
-</button>
+<source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+Your browser does not support the audio element.
+</audio>
 
 <!-- Music Control Panel (Slide-up) -->
 <div id="musicPanel" style="position: fixed; bottom: -200px; left: 50%; transform: translateX(-50%); z-index: 9999; width: 90%; max-width: 400px; background: rgba(30,41,59,0.95); backdrop-filter: blur(10px); padding: 20px; border-radius: 20px 20px 0 0; border: 1px solid var(--border); box-shadow: 0 -4px 20px rgba(0,0,0,0.3); transition: bottom 0.3s ease;">
@@ -3706,7 +3705,8 @@ const API_BASE = (() => {
 let authToken = null;
 let currentUser = null;
 let currentPredictionPeriod = 'day';
-let geocodedLocationName = null; // store human-readable name from geocoding
+let geocodedLocationName = null;
+
 
 // Screen Management
 function showScreen(screenId) {
@@ -4989,28 +4989,28 @@ return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
 return 'Today';
 }
 window.addEventListener('DOMContentLoaded', () => {
+console.log('DOM loaded, initializing...');
+  
 const savedToken = localStorage.getItem('authToken');
 const savedUser = localStorage.getItem('currentUser');
 
 if (savedToken && savedUser) {
+try {
 authToken = savedToken;
 currentUser = JSON.parse(savedUser);
-// Add delay to ensure DOM is ready
+console.log('User found, showing dashboard...');
 setTimeout(() => {
 showDashboard();
 }, 100);
-} else {
-const hasSeenWelcome = localStorage.getItem('hasSeenWelcome');
-if (!hasSeenWelcome) {
-setTimeout(() => {
-showScreen('welcomePage');
-}, 100);
-localStorage.setItem('hasSeenWelcome', 'true');
-} else {
-setTimeout(() => {
+} catch (e) {
+console.error('Error loading saved user:', e);
+localStorage.removeItem('authToken');
+localStorage.removeItem('currentUser');
 showScreen('startScreen');
-}, 100);
 }
+} else {
+console.log('No saved user, showing start screen...');
+showScreen('startScreen'); // ← Make sure this line exists
 }
 
 // Initialize audio after a short delay
