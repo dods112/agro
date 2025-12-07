@@ -3731,20 +3731,6 @@ updateAudioOnScreenChange();
 }
 }
 
-const targetScreen = document.getElementById(screenId);
-console.log('Target screen:', targetScreen);
-  
-if (targetScreen && targetScreen.classList) {
-targetScreen.classList.add('active');
-console.log('Screen activated:', screenId);
-} else {
-console.error('Screen not found: ' + screenId);
-// Fallback to start screen
-const startScreen = document.getElementById('startScreen');
-if (startScreen) {
-startScreen.classList.add('active');
-}
-}
 
 // Keep audio behavior in sync with current screen
 if (typeof updateAudioOnScreenChange === 'function') {
