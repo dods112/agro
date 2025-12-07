@@ -4446,22 +4446,42 @@ let geocodedLocationName = null;
 
 // Screen Management
 // Add safety checks for admin panel
-function showScreen(screenId) {
-console.log('Showing screen:', screenId);
-const screens = document.querySelectorAll('.screen');
-screens.forEach(s => {
-if (s && s.classList) {
-s.classList.remove('active');
-}
-});
+let lastScreenShown = null;
+let screenChangeInProgress = false;
 
-const targetScreen = document.getElementById(screenId);
-if (targetScreen && targetScreen.classList) {
-targetScreen.classList.add('active');
-console.log('Screen activated:', screenId);
-} else {
-console.error('Screen not found:', screenId);
-}
+function showScreen(screenId) {
+  // Prevent infinite loops
+  if (screenChangeInProgress) {
+    console.warn('Screen change already in progress, ignoring:', screenId);
+    return;
+  }
+  
+  // Prevent showing the same screen multiple times
+  if (lastScreenShown === screenId) {
+    console.log('Already showing:', screenId);
+    return;
+  }
+  
+  screenChangeInProgress = true;
+  console.log('Showing screen:', screenId);
+  
+  const screens = document.querySelectorAll('.screen');
+  screens.forEach(s => {
+    if (s && s.classList) {
+      s.classList.remove('active');
+    }
+  });
+
+  const targetScreen = document.getElementById(screenId);
+  if (targetScreen && targetScreen.classList) {
+    targetScreen.classList.add('active');
+    lastScreenShown = screenId;
+    console.log('Screen activated:', screenId);
+  } else {
+    console.error('Screen not found:', screenId);
+  }
+  
+  screenChangeInProgress = false;
 }
 
 // Background audio function (optional for admin)
