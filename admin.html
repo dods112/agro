@@ -476,11 +476,18 @@
 
   <script>
     // Auto-detect API base
-    const API_BASE = (() => {
-      const hostname = window.location.hostname;
-      return `http://${hostname}:8000/api`;
-    })();
-
+   // API Configuration
+const API_BASE = (() => {
+  const hostname = window.location.hostname;
+  
+  // Development
+  if (hostname === 'localhost' || hostname === '127.0.0.1') {
+    return 'http://localhost:8000/api';
+  }
+  
+  // Production - GitHub Pages
+  return 'https://agro-qwih.onrender.com/api';  // ✅ CORRECT
+})();
     let authToken = null;
     let currentAdmin = null;
 
