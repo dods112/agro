@@ -1467,7 +1467,7 @@ right: -100%;
   </nav>
 
   <div class="sidebar-footer">
-   <a href="#" class="sidebar-nav-item" onclick="refreshDashboard(event); return false;">
+   <a href="#" class="sidebar-nav-item" onclick="event.preventDefault(); refreshDashboard(event); toggleHamburgerMenu();">
   <span class="sidebar-icon">🔄</span>
   <span>Refresh Data</span>
 </a>
@@ -3019,8 +3019,7 @@ Your browser does not support the audio element.
 <span id="notifBadge" class="notif-badge">0</span>
 </button>
 
-<button class="btn-secondary btn-small" onclick="refreshDashboard()" title="Refresh data" style="display: flex; align-items: center; gap: 6px;">
-<span style="font-size: 1.1rem;">🔄</span>
+<button class="btn-secondary btn-small" onclick="refreshDashboard(event)" title="Refresh data" style="display: flex; align-items: center; gap: 6px;"><span style="font-size: 1.1rem;">🔄</span>
 <span>Refresh</span>
 </button>
 
