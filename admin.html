@@ -819,10 +819,18 @@ async function sendNotification(e) {
 }
 
     // Screen Management
-    function showScreen(screenId) {
-      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-      document.getElementById(screenId).classList.add('active');
+   function showScreen(screenId) {
+  document.querySelectorAll('.screen').forEach(s => {
+    if (s && s.classList) {
+      s.classList.remove('active');
     }
+  });
+  
+  const targetScreen = document.getElementById(screenId);
+  if (targetScreen && targetScreen.classList) {
+    targetScreen.classList.add('active');
+  }
+}
 
     function updateCharCount(inputId, counterId, maxLength) {
       const input = document.getElementById(inputId);

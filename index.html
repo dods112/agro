@@ -3733,6 +3733,7 @@ let geocodedLocationName = null;
 // Screen Management
 // Add safety checks for admin panel
 function showScreen(screenId) {
+console.log('Showing screen:', screenId);
 const screens = document.querySelectorAll('.screen');
 screens.forEach(s => {
 if (s && s.classList) {
@@ -3743,24 +3744,21 @@ s.classList.remove('active');
 const targetScreen = document.getElementById(screenId);
 if (targetScreen && targetScreen.classList) {
 targetScreen.classList.add('active');
+console.log('Screen activated:', screenId);
+} else {
+console.error('Screen not found:', screenId);
 }
 }
 
-// Dummy function if audio doesn't exist in admin
+// Background audio function (optional for admin)
 function initBackgroundAudio() {
 const audio = document.getElementById('bgAudio');
 if (!audio) {
-console.log('No audio element in admin panel');
+console.log('No audio element in admin panel - skipping');
 return;
 }
-// Add your admin audio logic here if needed
+// Add audio initialization if you want music in admin panel
 }
-
-// Keep audio behavior in sync with current screen
-if (typeof updateAudioOnScreenChange === 'function') {
-updateAudioOnScreenChange();
-}
-
 
 // Authentication
 async function handleSignup(e) {
