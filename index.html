@@ -1593,6 +1593,7 @@ right: -100%;
 
 /* ===== HAMBURGER MENU STYLES ===== */
 
+/* Hamburger button - hidden by default */
 .hamburger-btn {
   position: fixed;
   top: 20px;
@@ -1604,40 +1605,13 @@ right: -100%;
   border: 2px solid var(--border);
   border-radius: 12px;
   cursor: pointer;
-  display: none;
+  display: none !important; /* Always hidden by default */
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 6px;
   transition: all 0.3s ease;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-}
-
-/* Mobile adjustments */
-@media (max-width: 768px) {
-  .hamburger-btn {
-    top: 10px;
-    left: 10px;
-    width: 45px;
-    height: 45px;
-    z-index: 10002; /* Above everything */
-  }
-  
-  .sidebar-menu {
-    width: 85%; /* Better mobile width */
-    left: -85%;
-  }
-  
-  .sidebar-menu.open {
-    left: 0;
-  }
-}
-
-/* Show hamburger only on mobile when dashboard is active */
-@media (max-width: 768px) {
-  body:has(#dashboardScreen.active) .hamburger-btn {
-    display: flex !important;
-  }
 }
 
 .hamburger-btn:hover {
@@ -1836,31 +1810,34 @@ right: -100%;
   pointer-events: all;
 }
 
-/* Show hamburger only on dashboard */
-/* Show hamburger only on dashboard */
-/* Show hamburger only on mobile when dashboard is active */
-.hamburger-btn {
-  display: none !important;
-}
-
+/* Show ONLY on mobile (≤768px) when dashboard is active */
 @media (max-width: 768px) {
   body:has(#dashboardScreen.active) .hamburger-btn {
     display: flex !important;
   }
-}
-
-/* Mobile adjustments */
-@media (max-width: 768px) {
-  .sidebar-menu {
-    width: 280px;
-    left: -280px;
-  }
   
   .hamburger-btn {
-    top: 16px;
-    left: 16px;
+    top: 10px;
+    left: 10px;
     width: 45px;
     height: 45px;
+    z-index: 10002;
+  }
+  
+  .sidebar-menu {
+    width: 85%;
+    left: -85%;
+  }
+  
+  .sidebar-menu.open {
+    left: 0;
+  }
+}
+
+/* On desktop (>768px), NEVER show hamburger */
+@media (min-width: 769px) {
+  .hamburger-btn {
+    display: none !important;
   }
 }
   
@@ -3312,6 +3289,7 @@ updateMusicIcons();
 
 // Initialize on dashboard load
 // Combined showDashboard wrapper
+// Combined showDashboard wrapper
 const originalShowDashboard = window.showDashboard;
 window.showDashboard = function() {
   originalShowDashboard();
@@ -3322,10 +3300,10 @@ window.showDashboard = function() {
   // Update time every minute
   setInterval(updateDateTime, 60000);
   
-  // ✅ ADD HAMBURGER MENU UPDATES HERE
+  // Show hamburger menu ONLY on mobile
   setTimeout(() => {
     const hamburgerBtn = document.getElementById('hamburgerBtn');
-    if (hamburgerBtn) {
+    if (hamburgerBtn && window.innerWidth <= 768) {
       hamburgerBtn.style.display = 'flex';
     }
     updateSidebarUserInfo();
@@ -4313,16 +4291,19 @@ errorEl.textContent = error.message;
 }
 }
 async function handleLogout() {
-  // Close hamburger menu first
+  // Close hamburger menu immediately
   const sidebar = document.getElementById('sidebarMenu');
   const overlay = document.getElementById('sidebarOverlay');
   const btn = document.getElementById('hamburgerBtn');
   
   if (sidebar) sidebar.classList.remove('open');
   if (overlay) overlay.classList.remove('active');
-  if (btn) btn.classList.remove('active');
+  if (btn) {
+    btn.classList.remove('active');
+    btn.style.display = 'none'; // Hide hamburger immediately
+  }
   
-  // Then logout
+  // Logout API call
   try {
     await fetch(`${API_BASE}/logout`, {
       method: 'POST',
@@ -4332,10 +4313,13 @@ async function handleLogout() {
     console.error('Logout error:', error);
   }
 
+  // Clear everything
   authToken = null;
   currentUser = null;
   localStorage.removeItem('authToken');
   localStorage.removeItem('currentUser');
+  
+  // Go to start screen
   showScreen('startScreen');
 }
 
@@ -5509,37 +5493,36 @@ function startHeartbeat() {
 }
 
 window.addEventListener('DOMContentLoaded', () => {
-console.log('DOM loaded, initializing...');
+  console.log('DOM loaded, initializing...');
   
-const savedToken = localStorage.getItem('authToken');
-const savedUser = localStorage.getItem('currentUser');
+  const savedToken = localStorage.getItem('authToken');
+  const savedUser = localStorage.getItem('currentUser');
 
-if (savedToken && savedUser) {
-try {
-authToken = savedToken;
-currentUser = JSON.parse(savedUser);
-console.log('User found, showing dashboard...');
-setTimeout(() => {
-showDashboard();
-}, 100);
-} catch (e) {
-console.error('Error loading saved user:', e);
-localStorage.removeItem('authToken');
-localStorage.removeItem('currentUser');
-showScreen('startScreen');
-}
-} else {
-// ✅ Show start screen if not logged in
-console.log('No saved user, showing start screen...');
-showScreen('startScreen');
-}
+  if (savedToken && savedUser) {
+    try {
+      authToken = savedToken;
+      currentUser = JSON.parse(savedUser);
+      console.log('User found, showing dashboard...');
+      setTimeout(() => {
+        showDashboard();
+      }, 100);
+    } catch (e) {
+      console.error('Error loading saved user:', e);
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('currentUser');
+      showScreen('startScreen');
+    }
+  } else {
+    console.log('No saved user, showing start screen...');
+    showScreen('startScreen');
+  }
 
-// Initialize audio
-setTimeout(() => {
-if (typeof initBackgroundAudio === 'function') {
-initBackgroundAudio();
-}
-}, 200);
+  // Initialize audio
+  setTimeout(() => {
+    if (typeof initBackgroundAudio === 'function') {
+      initBackgroundAudio();
+    }
+  }, 200);
 });
 
 // NOTIFICATION FUNCTIONS
