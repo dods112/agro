@@ -1421,8 +1421,15 @@ right: -100%;
 }
 
 /* Force welcome page to show first - HIGHEST PRIORITY */
+/* Show welcome page by default ONLY if no user is logged in */
 #welcomePage {
   display: block !important;
+}
+
+/* Hide welcome page when dashboard is active */
+#dashboardScreen.active ~ #welcomePage,
+body:has(#dashboardScreen.active) #welcomePage {
+  display: none !important;
 }
 
 /* Hide all other screens by default */
@@ -2408,8 +2415,7 @@ flex: 1 1 calc(33.33% - 6px);
 </style>
 
 <!-- Welcome Page -->
-<div id="welcomePage" class="screen active" onclick="showScreen('startScreen')" style="cursor: pointer; position: relative; overflow: hidden;">
-  <div class="start-screen">
+<div id="welcomePage" class="screen" onclick="showScreen('startScreen')" style="cursor: pointer; position: relative; overflow: hidden;">  <div class="start-screen">
 <!-- Animated background particles -->
 <div class="particles">
 <div class="particle" style="left: 10%; animation-delay: 0s;">🌾</div>
