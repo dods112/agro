@@ -1467,10 +1467,10 @@ right: -100%;
   </nav>
 
   <div class="sidebar-footer">
-    <a href="#" class="sidebar-nav-item" onclick="refreshDashboard(); toggleHamburgerMenu();">
-      <span class="sidebar-icon">🔄</span>
-      <span>Refresh Data</span>
-    </a>
+   <a href="#" class="sidebar-nav-item" onclick="refreshDashboard(event); return false;">
+  <span class="sidebar-icon">🔄</span>
+  <span>Refresh Data</span>
+</a>
    <a href="#" class="sidebar-nav-item sidebar-logout" onclick="handleLogout(); return false;">
   <span class="sidebar-icon">🚪</span>
   <span>Log Out</span>
@@ -3216,22 +3216,40 @@ usernameEl.textContent = currentUser.username || currentUser.name;
 }
 
 // Refresh dashboard function
-function refreshDashboard() {
-const btn = event.target.closest('button');
-const icon = btn.querySelector('span');
+function refreshDashboard(event) {
+  // Close hamburger menu if open
+  const sidebar = document.getElementById('sidebarMenu');
+  const overlay = document.getElementById('sidebarOverlay');
+  const btn = document.getElementById('hamburgerBtn');
+  
+  if (sidebar) sidebar.classList.remove('open');
+  if (overlay) overlay.classList.remove('active');
+  if (btn) btn.classList.remove('active');
 
-// Add spin animation
-icon.style.animation = 'spin 1s linear';
+  // Get button and icon safely
+  let icon = null;
+  if (event) {
+    const button = event.target.closest('button');
+    if (button) {
+      icon = button.querySelector('span');
+    }
+  }
 
-// Reload data
-loadDashboardData();
+  // Add spin animation if icon exists
+  if (icon) {
+    icon.style.animation = 'spin 1s linear';
+  }
 
-// Remove animation after complete
-setTimeout(() => {
-icon.style.animation = '';
-}, 1000);
+  // Reload data
+  loadDashboardData();
+
+  // Remove animation after complete
+  if (icon) {
+    setTimeout(() => {
+      icon.style.animation = '';
+    }, 1000);
+  }
 }
-
 // Enhanced music control updates
 const originalInitBackgroundAudio = window.initBackgroundAudio;
 window.initBackgroundAudio = function() {
