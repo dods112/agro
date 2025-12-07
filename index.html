@@ -1421,6 +1421,73 @@ right: -100%;
 </head>
 <body>
 
+
+  <!-- HAMBURGER MENU BUTTON -->
+<button class="hamburger-btn" id="hamburgerBtn" onclick="toggleHamburgerMenu()">
+  <span class="hamburger-line"></span>
+  <span class="hamburger-line"></span>
+  <span class="hamburger-line"></span>
+</button>
+
+<!-- SIDEBAR MENU -->
+<div class="sidebar-menu" id="sidebarMenu">
+  <div class="sidebar-header">
+    <div class="sidebar-logo">🌾</div>
+    <h3>AgroWeather</h3>
+  </div>
+
+  <div class="sidebar-user-info" id="sidebarUserInfo">
+    <div class="sidebar-avatar" id="sidebarAvatar">?</div>
+    <div>
+      <div class="sidebar-username" id="sidebarUsername">Guest</div>
+      <div class="sidebar-location" id="sidebarLocation">Not logged in</div>
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a href="#" class="sidebar-nav-item" onclick="closeSidebarAndShow('dashboardScreen')">
+      <span class="sidebar-icon">🏠</span>
+      <span>Dashboard</span>
+    </a>
+    <a href="#" class="sidebar-nav-item" onclick="scrollToSection('currentWeather')">
+      <span class="sidebar-icon">🌤️</span>
+      <span>Current Weather</span>
+    </a>
+    <a href="#" class="sidebar-nav-item" onclick="scrollToSection('predictionData')">
+      <span class="sidebar-icon">📊</span>
+      <span>Predictions</span>
+    </a>
+    <a href="#" class="sidebar-nav-item" onclick="scrollToSection('advisoryData')">
+      <span class="sidebar-icon">💡</span>
+      <span>Farm Advisory</span>
+    </a>
+    <a href="#" class="sidebar-nav-item" onclick="scrollToSection('historicalData')">
+      <span class="sidebar-icon">📜</span>
+      <span>Historical Events</span>
+    </a>
+    <a href="#" class="sidebar-nav-item" onclick="closeSidebarAndNotification()">
+      <span class="sidebar-icon">🔔</span>
+      <span>Notifications</span>
+      <span class="sidebar-badge" id="sidebarNotifBadge">0</span>
+    </a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <a href="#" class="sidebar-nav-item" onclick="refreshDashboard(); toggleHamburgerMenu();">
+      <span class="sidebar-icon">🔄</span>
+      <span>Refresh Data</span>
+    </a>
+    <a href="#" class="sidebar-nav-item sidebar-logout" onclick="handleLogout()">
+      <span class="sidebar-icon">🚪</span>
+      <span>Log Out</span>
+    </a>
+  </div>
+</div>
+
+<!-- OVERLAY -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleHamburgerMenu()"></div>
+
+
 <!-- Start Screen -->
 <div id="startScreen" class="screen">
 <div class="start-screen">
@@ -1524,6 +1591,246 @@ right: -100%;
 </div>
 
 <style>
+
+/* ===== HAMBURGER MENU STYLES ===== */
+
+.hamburger-btn {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 10001;
+  width: 50px;
+  height: 50px;
+  background: var(--panel);
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  cursor: pointer;
+  display: none; /* Hidden by default, shown only on dashboard */
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.hamburger-btn:hover {
+  background: var(--primary);
+  border-color: var(--primary);
+  transform: scale(1.05);
+}
+
+.hamburger-btn.active {
+  background: var(--primary);
+  border-color: var(--primary);
+}
+
+.hamburger-line {
+  width: 28px;
+  height: 3px;
+  background: var(--text);
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+.hamburger-btn.active .hamburger-line:nth-child(1) {
+  transform: rotate(45deg) translateY(9px);
+}
+
+.hamburger-btn.active .hamburger-line:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger-btn.active .hamburger-line:nth-child(3) {
+  transform: rotate(-45deg) translateY(-9px);
+}
+
+/* Sidebar Menu */
+.sidebar-menu {
+  position: fixed;
+  top: 0;
+  left: -320px;
+  width: 320px;
+  height: 100vh;
+  background: var(--panel);
+  border-right: 1px solid var(--border);
+  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.5);
+  z-index: 10000;
+  transition: left 0.3s ease;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-menu.open {
+  left: 0;
+}
+
+.sidebar-header {
+  padding: 24px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--bg-light);
+}
+
+.sidebar-logo {
+  font-size: 2rem;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.sidebar-header h3 {
+  font-size: 1.5rem;
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.sidebar-user-info {
+  padding: 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: rgba(34, 197, 94, 0.05);
+}
+
+.sidebar-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+}
+
+.sidebar-username {
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: var(--text);
+}
+
+.sidebar-location {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.sidebar-location::before {
+  content: '📍';
+  font-size: 0.9rem;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 12px 0;
+}
+
+.sidebar-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 20px;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border-left: 3px solid transparent;
+  position: relative;
+}
+
+.sidebar-nav-item:hover {
+  background: rgba(34, 197, 94, 0.1);
+  color: var(--text);
+  border-left-color: var(--primary);
+}
+
+.sidebar-nav-item:active {
+  background: rgba(34, 197, 94, 0.2);
+}
+
+.sidebar-icon {
+  font-size: 1.3rem;
+  width: 28px;
+  text-align: center;
+}
+
+.sidebar-badge {
+  margin-left: auto;
+  background: var(--danger);
+  color: white;
+  border-radius: 12px;
+  padding: 2px 8px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  min-width: 20px;
+  text-align: center;
+}
+
+.sidebar-footer {
+  border-top: 1px solid var(--border);
+  padding: 12px 0;
+  background: var(--bg-light);
+}
+
+.sidebar-logout {
+  color: var(--danger) !important;
+}
+
+.sidebar-logout:hover {
+  background: rgba(239, 68, 68, 0.1) !important;
+  border-left-color: var(--danger) !important;
+}
+
+/* Overlay */
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.sidebar-overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* Show hamburger only on dashboard */
+#dashboardScreen.active ~ .hamburger-btn,
+.screen.active .hamburger-btn {
+  display: flex;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .sidebar-menu {
+    width: 280px;
+    left: -280px;
+  }
+  
+  .hamburger-btn {
+    top: 16px;
+    left: 16px;
+    width: 45px;
+    height: 45px;
+  }
+}
+  
 /* Background Elements */
 .bg-elements {
 position: absolute;
@@ -2265,7 +2572,10 @@ transform: translateY(0);
 .strength-strong { background: var(--primary) !important; }
 </style>
 
+
 <script>
+
+
 
   
 // Password visibility toggle
@@ -2863,15 +3173,25 @@ updateMusicIcons();
 };
 
 // Initialize on dashboard load
+// Combined showDashboard wrapper
 const originalShowDashboard = window.showDashboard;
 window.showDashboard = function() {
-originalShowDashboard();
-updateDateTime();
-updateUserDisplay();
-startHeartbeat(); 
+  originalShowDashboard();
+  updateDateTime();
+  updateUserDisplay();
+  startHeartbeat(); 
 
-// Update time every minute
-setInterval(updateDateTime, 60000);
+  // Update time every minute
+  setInterval(updateDateTime, 60000);
+  
+  // ✅ ADD HAMBURGER MENU UPDATES HERE
+  setTimeout(() => {
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    if (hamburgerBtn) {
+      hamburgerBtn.style.display = 'flex';
+    }
+    updateSidebarUserInfo();
+  }, 100);
 };
 </script>
 
@@ -5220,6 +5540,10 @@ year: date.getFullYear() !== now.getFullYear() ? 'numeric' : undefined
 
 function displayHistoricalEvents(data) {
 }
+
+// Combined showDashboard wrapper
+
+
 </script>
 </body>
 </html>
