@@ -1423,12 +1423,6 @@ right: -100%;
 
 
   <!-- HAMBURGER MENU BUTTON -->
-<button class="hamburger-btn" id="hamburgerBtn" onclick="toggleHamburgerMenu()">
-  <span class="hamburger-line"></span>
-  <span class="hamburger-line"></span>
-  <span class="hamburger-line"></span>
-</button>
-
 <!-- SIDEBAR MENU -->
 <div class="sidebar-menu" id="sidebarMenu">
   <div class="sidebar-header">
@@ -1811,9 +1805,9 @@ right: -100%;
 }
 
 /* Show hamburger only on dashboard */
-#dashboardScreen.active ~ .hamburger-btn,
-.screen.active .hamburger-btn {
-  display: flex;
+/* Show hamburger only on dashboard */
+body:has(#dashboardScreen.active) .hamburger-btn {
+  display: flex !important;
 }
 
 /* Mobile adjustments */
@@ -2829,6 +2823,13 @@ submitBtn.innerHTML = originalText;
 
 <!-- Dashboard Screen -->
  <div id="dashboardScreen" class="screen">
+
+   <button class="hamburger-btn" id="hamburgerBtn" onclick="toggleHamburgerMenu()">
+    <span class="hamburger-line"></span>
+    <span class="hamburger-line"></span>
+    <span class="hamburger-line"></span>
+  </button>
+
 <audio id="bgAudio" loop preload="metadata" aria-hidden="true">
 <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
 Your browser does not support the audio element.
