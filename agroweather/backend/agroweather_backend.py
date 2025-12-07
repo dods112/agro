@@ -1163,6 +1163,37 @@ async def get_all_users(user: dict = Depends(get_current_user)):
     
     return result
 
+
+@app.get("/api/admin/stats")
+async def get_admin_stats(user: dict = Depends(get_current_user)):
+    """Get admin dashboard statistics"""
+    if not user.get('is_admin'):
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    conn = get_db()
+    c = conn.cursor()
+    
+    # Count total users
+    total_users = c.execute('SELECT COUNT(*) as count FROM farmers').fetchone()['count']
+    
+    # Count total notifications
+    total_notifs = c.execute('SELECT COUNT(*) as count FROM notifications').fetchone()['count']
+    
+    # Count active users (logged in within last 24 hours)
+    yesterday = (datetime.now() - timedelta(days=1)).isoformat()
+    active_users = c.execute(
+        'SELECT COUNT(DISTINCT user_id) as count FROM sessions WHERE created_at > ?',
+        (yesterday,)
+    ).fetchone()['count']
+    
+    conn.close()
+    
+    return {
+        "total_users": total_users,
+        "total_notifications": total_notifs,
+        "active_users": active_users
+    }
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("agroweather_backend:app", host="0.0.0.0", port=8000, reload=True)
