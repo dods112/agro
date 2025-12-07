@@ -1158,7 +1158,7 @@ async def get_all_users(user: dict = Depends(get_current_user)):
     for user_row in users:
         user_dict = dict(user_row)
         
-        # Determine if online (active within last 5 minutes)
+        # Determine if online (active within last 2 minutes)
         if user_dict.get('last_seen'):
             last_seen = datetime.fromisoformat(user_dict['last_seen'])
             diff_minutes = (now - last_seen).total_seconds() / 60
