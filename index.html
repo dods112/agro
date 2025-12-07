@@ -1431,17 +1431,22 @@ right: -100%;
   display: none !important;
 }
 
-/* Only show screens when they have .active class */
-#startScreen.active,
-#loginScreen.active,
-#signupScreen.active,
-#dashboardScreen.active {
+/* Force welcome page to show first - HIGHEST PRIORITY */
+#welcomePage {
   display: block !important;
 }
 
-/* Hide welcome page when another screen is active */
-body:has(.screen.active:not(#welcomePage)) #welcomePage {
+/* Hide all other screens by default */
+#startScreen,
+#loginScreen,
+#signupScreen,
+#dashboardScreen {
   display: none !important;
+}
+
+/* Show any screen that has .active class */
+.screen.active {
+  display: block !important;
 }
 </style>
 </head>
