@@ -1417,6 +1417,17 @@ width: 100%;
 right: -100%;
 }
 }
+
+body:not(.dashboard-loaded) #welcomePage {
+  display: block !important;
+}
+
+body:not(.dashboard-loaded) #startScreen,
+body:not(.dashboard-loaded) #loginScreen,
+body:not(.dashboard-loaded) #signupScreen,
+body:not(.dashboard-loaded) #dashboardScreen {
+  display: none !important;
+}
 </style>
 </head>
 <body>
@@ -3079,7 +3090,7 @@ display: none !important;
 display: block !important;
 }
 
-/* Ensure start screen shows first */
+/* Ensure welcome page shows first */
 #welcomePage {
 display: block;
 }
@@ -3087,6 +3098,7 @@ display: block;
 #welcomePage.active {
 display: block !important;
 }
+
 /* Add hover effect to links */
 a:hover {
 color: var(--primary-light) !important;
