@@ -2750,19 +2750,30 @@ hour12: true
 // Update user initial
 // Update user initial and display
 function updateUserDisplay() {
-if (currentUser && currentUser.name) {
-const initial = currentUser.name.charAt(0).toUpperCase();
+if (!currentUser) {
+console.warn('No current user');
+return;
+}
+
 const initialEl = document.getElementById('userInitial');
 const usernameEl = document.getElementById('headerUsername');
+const farmerNameEl = document.getElementById('farmerName');
+const farmerLocationEl = document.getElementById('farmerLocation');
 
-if (initialEl) {
-initialEl.textContent = initial;
+if (currentUser.name && initialEl) {
+initialEl.textContent = currentUser.name.charAt(0).toUpperCase();
 }
 
 if (usernameEl) {
-// Display the username from registration
-usernameEl.textContent = currentUser.username || currentUser.name;
+usernameEl.textContent = currentUser.username || currentUser.name || 'User';
 }
+
+if (farmerNameEl && currentUser.name) {
+farmerNameEl.textContent = currentUser.name;
+}
+
+if (farmerLocationEl && currentUser.location) {
+farmerLocationEl.textContent = currentUser.location;
 }
 }
 
@@ -3710,14 +3721,29 @@ let geocodedLocationName = null; // store human-readable name from geocoding
 
 // Screen Management
 function showScreen(screenId) {
-document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-const screen = document.getElementById(screenId);
-if (screen) {
-screen.classList.add('active');
+const screens = document.querySelectorAll('.screen');
+if (!screens || screens.length === 0) {
+console.warn('No screens found');
+return;
+}
+
+screens.forEach(s => {
+if (s && s.classList) {
+s.classList.remove('active');
+}
+});
+
+const targetScreen = document.getElementById(screenId);
+if (targetScreen && targetScreen.classList) {
+targetScreen.classList.add('active');
+} else {
+console.error(`Screen not found: ${screenId}`);
 }
 
 // Keep audio behavior in sync with current screen
-if (typeof updateAudioOnScreenChange === 'function') updateAudioOnScreenChange();
+if (typeof updateAudioOnScreenChange === 'function') {
+updateAudioOnScreenChange();
+}
 }
 
 // Authentication
@@ -3830,19 +3856,33 @@ showScreen('startScreen');
 }
 
 function showDashboard() {
+// Wait for DOM to be ready
+setTimeout(() => {
 const farmerNameEl = document.getElementById('farmerName');
 const farmerLocationEl = document.getElementById('farmerLocation');
+const headerUsernameEl = document.getElementById('headerUsername');
+const userInitialEl = document.getElementById('userInitial');
 
-if (farmerNameEl) farmerNameEl.textContent = currentUser.name;
-if (farmerLocationEl) farmerLocationEl.textContent = currentUser.location;
+if (farmerNameEl && currentUser && currentUser.name) {
+farmerNameEl.textContent = currentUser.name;
+}
+if (farmerLocationEl && currentUser && currentUser.location) {
+farmerLocationEl.textContent = currentUser.location;
+}
+if (headerUsernameEl && currentUser && currentUser.username) {
+headerUsernameEl.textContent = currentUser.username;
+}
+if (userInitialEl && currentUser && currentUser.name) {
+userInitialEl.textContent = currentUser.name.charAt(0).toUpperCase();
+}
 
 showScreen('dashboardScreen');
 loadDashboardData();
-updateUserDisplay();
 
 // Initialize notifications
 updateNotificationBadge();
 setInterval(updateNotificationBadge, 30000);
+}, 50);
 }
 // Geocode city name to coordinates using Nominatim (forward geocode)
 async function geocodeCity(city) {
@@ -4963,16 +5003,28 @@ const savedUser = localStorage.getItem('currentUser');
 if (savedToken && savedUser) {
 authToken = savedToken;
 currentUser = JSON.parse(savedUser);
+// Add delay to ensure DOM is ready
+setTimeout(() => {
 showDashboard();
+}, 100);
 } else {
 const hasSeenWelcome = localStorage.getItem('hasSeenWelcome');
 if (!hasSeenWelcome) {
+setTimeout(() => {
 showScreen('welcomePage');
+}, 100);
 localStorage.setItem('hasSeenWelcome', 'true');
+} else {
+setTimeout(() => {
+showScreen('startScreen');
+}, 100);
 }
 }
 
+// Initialize audio after a short delay
+setTimeout(() => {
 initBackgroundAudio();
+}, 200);
 });
 
 // NOTIFICATION FUNCTIONS

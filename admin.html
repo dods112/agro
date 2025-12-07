@@ -519,16 +519,36 @@ function updateCharCount(inputId, counterId, maxLength) {
 
 
     // Check if already logged in
-    window.addEventListener('DOMContentLoaded', () => {
-      const savedToken = localStorage.getItem('adminAuthToken');
-      const savedAdmin = localStorage.getItem('currentAdmin');
-      
-      if (savedToken && savedAdmin) {
-        authToken = savedToken;
-        currentAdmin = JSON.parse(savedAdmin);
-        showAdminDashboard();
-      }
-    });
+   window.addEventListener('DOMContentLoaded', () => {
+const savedToken = localStorage.getItem('authToken');
+const savedUser = localStorage.getItem('currentUser');
+
+if (savedToken && savedUser) {
+authToken = savedToken;
+currentUser = JSON.parse(savedUser);
+// Add delay to ensure DOM is ready
+setTimeout(() => {
+showDashboard();
+}, 100);
+} else {
+const hasSeenWelcome = localStorage.getItem('hasSeenWelcome');
+if (!hasSeenWelcome) {
+setTimeout(() => {
+showScreen('welcomePage');
+}, 100);
+localStorage.setItem('hasSeenWelcome', 'true');
+} else {
+setTimeout(() => {
+showScreen('startScreen');
+}, 100);
+}
+}
+
+// Initialize audio after a short delay
+setTimeout(() => {
+initBackgroundAudio();
+}, 200);
+});
 
     // Admin Login
     async function handleAdminLogin(e) {
