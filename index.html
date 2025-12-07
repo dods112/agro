@@ -5773,6 +5773,13 @@ window.addEventListener('DOMContentLoaded', () => {
       authToken = savedToken;
       currentUser = JSON.parse(savedUser);
       console.log('User found, showing dashboard...');
+      
+      // Remove welcome page active class
+      const welcomePage = document.getElementById('welcomePage');
+      if (welcomePage) {
+        welcomePage.classList.remove('active');
+      }
+      
       setTimeout(() => {
         showDashboard();
       }, 100);
@@ -5780,11 +5787,11 @@ window.addEventListener('DOMContentLoaded', () => {
       console.error('Error loading saved user:', e);
       localStorage.removeItem('authToken');
       localStorage.removeItem('currentUser');
-      showScreen('welcomePage'); // ← Make sure this says 'welcomePage'
+      showScreen('welcomePage');
     }
   } else {
     console.log('No saved user, showing welcome screen...');
-    showScreen('welcomePage'); // ← Make sure this says 'welcomePage'
+    showScreen('welcomePage');
   }
 
   // Initialize audio
