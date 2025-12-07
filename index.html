@@ -1811,11 +1811,13 @@ right: -100%;
 }
 
 /* Show ONLY on mobile (≤768px) when dashboard is active */
+/* Show on BOTH mobile and desktop when dashboard is active */
+body:has(#dashboardScreen.active) .hamburger-btn {
+  display: flex !important;
+}
+
+/* Mobile specific adjustments */
 @media (max-width: 768px) {
-  body:has(#dashboardScreen.active) .hamburger-btn {
-    display: flex !important;
-  }
-  
   .hamburger-btn {
     top: 10px;
     left: 10px;
@@ -1834,10 +1836,22 @@ right: -100%;
   }
 }
 
-/* On desktop (>768px), NEVER show hamburger */
+/* Desktop specific adjustments */
 @media (min-width: 769px) {
   .hamburger-btn {
-    display: none !important;
+    top: 20px;
+    left: 20px;
+    width: 50px;
+    height: 50px;
+  }
+  
+  .sidebar-menu {
+    width: 320px;
+    left: -320px;
+  }
+  
+  .sidebar-menu.open {
+    left: 0;
   }
 }
   
