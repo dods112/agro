@@ -1471,10 +1471,10 @@ right: -100%;
       <span class="sidebar-icon">🔄</span>
       <span>Refresh Data</span>
     </a>
-    <a href="#" class="sidebar-nav-item sidebar-logout" onclick="handleLogout()">
-      <span class="sidebar-icon">🚪</span>
-      <span>Log Out</span>
-    </a>
+   <a href="#" class="sidebar-nav-item sidebar-logout" onclick="handleLogout(); return false;">
+  <span class="sidebar-icon">🚪</span>
+  <span>Log Out</span>
+</a>
   </div>
 </div>
 
@@ -1604,13 +1604,40 @@ right: -100%;
   border: 2px solid var(--border);
   border-radius: 12px;
   cursor: pointer;
-  display: none; /* Hidden by default, shown only on dashboard */
+  display: none;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 6px;
   transition: all 0.3s ease;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .hamburger-btn {
+    top: 10px;
+    left: 10px;
+    width: 45px;
+    height: 45px;
+    z-index: 10002; /* Above everything */
+  }
+  
+  .sidebar-menu {
+    width: 85%; /* Better mobile width */
+    left: -85%;
+  }
+  
+  .sidebar-menu.open {
+    left: 0;
+  }
+}
+
+/* Show hamburger only on mobile when dashboard is active */
+@media (max-width: 768px) {
+  body:has(#dashboardScreen.active) .hamburger-btn {
+    display: flex !important;
+  }
 }
 
 .hamburger-btn:hover {
@@ -4286,20 +4313,30 @@ errorEl.textContent = error.message;
 }
 }
 async function handleLogout() {
-try {
-await fetch(`${API_BASE}/logout`, {
-method: 'POST',
-headers: { 'Authorization': `Bearer ${authToken}` }
-});
-} catch (error) {
-console.error('Logout error:', error);
-}
+  // Close hamburger menu first
+  const sidebar = document.getElementById('sidebarMenu');
+  const overlay = document.getElementById('sidebarOverlay');
+  const btn = document.getElementById('hamburgerBtn');
+  
+  if (sidebar) sidebar.classList.remove('open');
+  if (overlay) overlay.classList.remove('active');
+  if (btn) btn.classList.remove('active');
+  
+  // Then logout
+  try {
+    await fetch(`${API_BASE}/logout`, {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${authToken}` }
+    });
+  } catch (error) {
+    console.error('Logout error:', error);
+  }
 
-authToken = null;
-currentUser = null;
-localStorage.removeItem('authToken');
-localStorage.removeItem('currentUser');
-showScreen('startScreen');
+  authToken = null;
+  currentUser = null;
+  localStorage.removeItem('authToken');
+  localStorage.removeItem('currentUser');
+  showScreen('startScreen');
 }
 
 function showDashboard() {
