@@ -1422,14 +1422,13 @@ right: -100%;
 
 /* Force welcome page to show first - HIGHEST PRIORITY */
 /* Show welcome page by default ONLY if no user is logged in */
+/* Welcome page shows by default */
 #welcomePage {
   display: block !important;
 }
 
-/* Hide welcome page when dashboard is active */
-#dashboardScreen.active ~ #welcomePage,
-body:has(#dashboardScreen.active) #welcomePage {
-  display: none !important;
+#welcomePage.active {
+  display: block !important;
 }
 
 /* Hide all other screens by default */
@@ -1440,16 +1439,7 @@ body:has(#dashboardScreen.active) #welcomePage {
   display: none !important;
 }
 
-/* Force welcome page to show first - HIGHEST PRIORITY */
-/* Simple welcome page logic */
-#welcomePage {
-  display: none;
-}
-
-#welcomePage:not(.hidden) {
-  display: block !important;
-}
-
+/* Show screens when active */
 #dashboardScreen.active,
 #startScreen.active,
 #loginScreen.active,
@@ -1457,6 +1447,7 @@ body:has(#dashboardScreen.active) #welcomePage {
   display: block !important;
 }
 
+/* Hide welcome when other screens are active */
 #dashboardScreen.active ~ #welcomePage,
 #startScreen.active ~ #welcomePage,
 #loginScreen.active ~ #welcomePage,
@@ -4514,23 +4505,7 @@ let geocodedLocationName = null;
 
 // Screen Management
 // Add safety checks for admin panel
-let lastScreenShown = null;
-let screenChangeInProgress = false;
-
 function showScreen(screenId) {
-  // Prevent infinite loops
-  if (screenChangeInProgress) {
-    console.warn('Screen change already in progress, ignoring:', screenId);
-    return;
-  }
-  
-  // Prevent showing the same screen multiple times
-  if (lastScreenShown === screenId) {
-    console.log('Already showing:', screenId);
-    return;
-  }
-  
-  screenChangeInProgress = true;
   console.log('Showing screen:', screenId);
   
   const screens = document.querySelectorAll('.screen');
@@ -4543,13 +4518,10 @@ function showScreen(screenId) {
   const targetScreen = document.getElementById(screenId);
   if (targetScreen && targetScreen.classList) {
     targetScreen.classList.add('active');
-    lastScreenShown = screenId;
     console.log('Screen activated:', screenId);
   } else {
     console.error('Screen not found:', screenId);
   }
-  
-  screenChangeInProgress = false;
 }
 
 // Background audio function (optional for admin)
@@ -5879,7 +5851,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   } else {
     console.log('No saved user, showing start screen...');
-    showScreen('startScreen');
+    showScreen('welcomePage');
   }
 
   // Initialize audio
