@@ -2266,6 +2266,8 @@ transform: translateY(0);
 </style>
 
 <script>
+
+  
 // Password visibility toggle
 function togglePasswordVisibility(inputId, iconId) {
 const input = document.getElementById(inputId);
@@ -2423,6 +2425,24 @@ Back
 </div>
 
 <style>
+
+  /* Make sure all screens are hidden by default */
+.screen {
+display: none !important;
+}
+
+.screen.active {
+display: block !important;
+}
+
+/* Ensure start screen shows first */
+#startScreen {
+display: block;
+}
+
+#startScreen.active {
+display: block !important;
+}
 /* Add hover effect to links */
 a:hover {
 color: var(--primary-light) !important;
@@ -3711,12 +3731,9 @@ let geocodedLocationName = null;
 
 
 // Screen Management
+// Add safety checks for admin panel
 function showScreen(screenId) {
 const screens = document.querySelectorAll('.screen');
-if (!screens || screens.length === 0) {
-return;
-}
-
 screens.forEach(s => {
 if (s && s.classList) {
 s.classList.remove('active');
@@ -3727,12 +3744,17 @@ const targetScreen = document.getElementById(screenId);
 if (targetScreen && targetScreen.classList) {
 targetScreen.classList.add('active');
 }
-
-if (typeof updateAudioOnScreenChange === 'function') {
-updateAudioOnScreenChange();
-}
 }
 
+// Dummy function if audio doesn't exist in admin
+function initBackgroundAudio() {
+const audio = document.getElementById('bgAudio');
+if (!audio) {
+console.log('No audio element in admin panel');
+return;
+}
+// Add your admin audio logic here if needed
+}
 
 // Keep audio behavior in sync with current screen
 if (typeof updateAudioOnScreenChange === 'function') {
@@ -5024,13 +5046,16 @@ localStorage.removeItem('currentUser');
 showScreen('startScreen');
 }
 } else {
+// ✅ Show start screen if not logged in
 console.log('No saved user, showing start screen...');
-showScreen('startScreen'); // ← Make sure this line exists
+showScreen('startScreen');
 }
 
-// Initialize audio after a short delay
+// Initialize audio
 setTimeout(() => {
+if (typeof initBackgroundAudio === 'function') {
 initBackgroundAudio();
+}
 }, 200);
 });
 
