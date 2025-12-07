@@ -3080,11 +3080,11 @@ display: block !important;
 }
 
 /* Ensure start screen shows first */
-#startScreen {
+#welcomePage {
 display: block;
 }
 
-#startScreen.active {
+#welcomePage.active {
 display: block !important;
 }
 /* Add hover effect to links */
@@ -5746,11 +5746,11 @@ window.addEventListener('DOMContentLoaded', () => {
       console.error('Error loading saved user:', e);
       localStorage.removeItem('authToken');
       localStorage.removeItem('currentUser');
-      showScreen('startScreen');
+      showScreen('welcomePage'); // ← Make sure this says 'welcomePage'
     }
   } else {
-    console.log('No saved user, showing start screen...');
-    showScreen('startScreen');
+    console.log('No saved user, showing welcome screen...');
+    showScreen('welcomePage'); // ← Make sure this says 'welcomePage'
   }
 
   // Initialize audio
