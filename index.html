@@ -1441,21 +1441,27 @@ body:has(#dashboardScreen.active) #welcomePage {
 }
 
 /* Force welcome page to show first - HIGHEST PRIORITY */
+/* Simple welcome page logic */
 #welcomePage {
+  display: none;
+}
+
+#welcomePage:not(.hidden) {
   display: block !important;
 }
 
-/* Hide all other screens by default */
-#startScreen,
-#loginScreen,
-#signupScreen,
-#dashboardScreen {
+#dashboardScreen.active,
+#startScreen.active,
+#loginScreen.active,
+#signupScreen.active {
+  display: block !important;
+}
+
+#dashboardScreen.active ~ #welcomePage,
+#startScreen.active ~ #welcomePage,
+#loginScreen.active ~ #welcomePage,
+#signupScreen.active ~ #welcomePage {
   display: none !important;
-}
-
-/* Show any screen that has .active class */
-.screen.active {
-  display: block !important;
 }
 </style>
 </head>
@@ -2476,7 +2482,8 @@ flex: 1 1 calc(33.33% - 6px);
 </style>
 
 <!-- Welcome Page -->
-<div id="welcomePage" class="screen" onclick="showScreen('startScreen')" style="cursor: pointer; position: relative; overflow: hidden;">  <div class="start-screen">
+<div id="welcomePage" class="screen" style="cursor: pointer; position: relative; overflow: hidden;">
+
 <!-- Animated background particles -->
 <div class="particles">
 <div class="particle" style="left: 10%; animation-delay: 0s;">🌾</div>
@@ -5861,12 +5868,6 @@ window.addEventListener('DOMContentLoaded', () => {
       currentUser = JSON.parse(savedUser);
       console.log('User found, showing dashboard...');
       
-      // Remove welcome page active class
-      const welcomePage = document.getElementById('welcomePage');
-      if (welcomePage) {
-        welcomePage.classList.remove('active');
-      }
-      
       setTimeout(() => {
         showDashboard();
       }, 100);
@@ -5874,11 +5875,11 @@ window.addEventListener('DOMContentLoaded', () => {
       console.error('Error loading saved user:', e);
       localStorage.removeItem('authToken');
       localStorage.removeItem('currentUser');
-      showScreen('welcomePage');
+      showScreen('startScreen');
     }
   } else {
-    console.log('No saved user, showing welcome screen...');
-    showScreen('welcomePage');
+    console.log('No saved user, showing start screen...');
+    showScreen('startScreen');
   }
 
   // Initialize audio
@@ -5888,6 +5889,12 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   }, 200);
 });
+
+document.getElementById('welcomePage')?.addEventListener('click', () => {
+  showScreen('startScreen');
+});
+
+// Combined showDashboard wrapper
 
 // NOTIFICATION FUNCTIONS
 let notificationPanelOpen = false;
