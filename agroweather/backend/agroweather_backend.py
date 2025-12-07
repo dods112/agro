@@ -331,17 +331,24 @@ async def get_current_user(authorization: Optional[str] = Header(None)):
         (token,)
     ).fetchone()
 
-    conn.close()
-
     if not session:
+        conn.close()
         raise HTTPException(status_code=401, detail="Invalid session")
 
     expires_at = datetime.fromisoformat(session['expires_at'])
     if datetime.now() > expires_at:
+        conn.close()
         raise HTTPException(status_code=401, detail="Session expired")
 
-    return dict(session)
+    # ✅ UPDATE: Track last_seen timestamp
+    c.execute(
+        'UPDATE farmers SET last_seen = ? WHERE id = ?',
+        (datetime.now().isoformat(), session['id'])
+    )
+    conn.commit()
+    conn.close()
 
+    return dict(session)
 def calculate_heat_index(temp_c: float, humidity: float) -> float:
     """Calculate heat index (feels-like temperature) in Celsius"""
     # Convert to Fahrenheit for calculation
@@ -1155,7 +1162,7 @@ async def get_all_users(user: dict = Depends(get_current_user)):
         if user_dict.get('last_seen'):
             last_seen = datetime.fromisoformat(user_dict['last_seen'])
             diff_minutes = (now - last_seen).total_seconds() / 60
-            user_dict['is_online'] = diff_minutes < 5
+            user_dict['is_online'] = diff_minutes < 2
         else:
             user_dict['is_online'] = False
             

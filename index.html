@@ -2335,6 +2335,9 @@ matchText.textContent = '✗ Passwords do not match';
 matchText.style.color = 'var(--danger)';
 }
 }
+
+
+
 </script>
 
 <!-- Login Screen -->
@@ -2865,6 +2868,7 @@ window.showDashboard = function() {
 originalShowDashboard();
 updateDateTime();
 updateUserDisplay();
+startHeartbeat(); 
 
 // Update time every minute
 setInterval(updateDateTime, 60000);
@@ -2884,9 +2888,7 @@ setInterval(updateDateTime, 60000);
 <span>City / Place</span>
 </label>
 <div class="input-wrapper">
-<input type="text" id="cityInput" class="enhanced-input" placeholder="Tandag City, Surigao del Sur" value="Tandag City, Surigao del Sur">
-<span class="input-icon">📌</span>
-</div>
+<input type="text" id="cityInput" class="enhanced-input" placeholder="Enter city or place name" value=""></div>
 </div>
 
 <div class="form-group enhanced-form-group">
@@ -3872,9 +3874,9 @@ showScreen('startScreen');
 function showDashboard() {
 console.log('showDashboard called');
 console.log('Current user:', currentUser);
-
-// First, show the dashboard screen
 showScreen('dashboardScreen');
+startHeartbeat();
+loadDashboardData();
 
 // Then update user information after a short delay
 setTimeout(() => {
@@ -5023,6 +5025,21 @@ return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
 }
 return 'Today';
 }
+
+function sendHeartbeat() {
+  if (authToken && currentUser) {
+    fetch(`${API_BASE}/me`, {
+      headers: { 'Authorization': `Bearer ${authToken}` }
+    }).catch(() => {}); // Silent fail
+  }
+}
+
+// Start heartbeat when user is logged in
+function startHeartbeat() {
+  sendHeartbeat();
+  setInterval(sendHeartbeat, 60000);
+}
+
 window.addEventListener('DOMContentLoaded', () => {
 console.log('DOM loaded, initializing...');
   
