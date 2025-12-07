@@ -2581,60 +2581,6 @@ transform: translateY(0);
 
 <script>
 
-// ===== HAMBURGER MENU FUNCTIONS =====
-
-function toggleHamburgerMenu() {
-  const sidebar = document.getElementById('sidebarMenu');
-  const overlay = document.getElementById('sidebarOverlay');
-  const btn = document.getElementById('hamburgerBtn');
-  
-  if (!sidebar || !overlay || !btn) return;
-  
-  const isOpen = sidebar.classList.contains('open');
-  
-  if (isOpen) {
-    sidebar.classList.remove('open');
-    overlay.classList.remove('active');
-    btn.classList.remove('active');
-  } else {
-    sidebar.classList.add('open');
-    overlay.classList.add('active');
-    btn.classList.add('active');
-    updateSidebarUserInfo();
-  }
-}
-
-function updateSidebarUserInfo() {
-  if (!currentUser) return;
-  
-  const avatar = document.getElementById('sidebarAvatar');
-  const username = document.getElementById('sidebarUsername');
-  const location = document.getElementById('sidebarLocation');
-  const badge = document.getElementById('sidebarNotifBadge');
-  
-  if (avatar && currentUser.name) {
-    avatar.textContent = currentUser.name.charAt(0).toUpperCase();
-  }
-  
-  if (username && currentUser.name) {
-    username.textContent = currentUser.name;
-  }
-  
-  if (location && currentUser.location) {
-    location.textContent = currentUser.location;
-  }
-  
-  // Sync notification badge
-  const mainBadge = document.getElementById('notifBadge');
-  if (badge && mainBadge) {
-    badge.textContent = mainBadge.textContent;
-    if (mainBadge.classList.contains('show')) {
-      badge.style.display = 'block';
-    } else {
-      badge.style.display = 'none';
-    }
-  }
-}
 
 function closeSidebarAndShow(screenId) {
   toggleHamburgerMenu();
@@ -2729,7 +2675,87 @@ matchText.style.color = 'var(--danger)';
 }
 }
 
+// ===== HAMBURGER MENU FUNCTIONS =====
 
+function toggleHamburgerMenu() {
+  const sidebar = document.getElementById('sidebarMenu');
+  const overlay = document.getElementById('sidebarOverlay');
+  const btn = document.getElementById('hamburgerBtn');
+  
+  if (!sidebar || !overlay || !btn) {
+    console.error('Hamburger menu elements not found');
+    return;
+  }
+  
+  const isOpen = sidebar.classList.contains('open');
+  
+  if (isOpen) {
+    sidebar.classList.remove('open');
+    overlay.classList.remove('active');
+    btn.classList.remove('active');
+  } else {
+    sidebar.classList.add('open');
+    overlay.classList.add('active');
+    btn.classList.add('active');
+    updateSidebarUserInfo();
+  }
+}
+
+function updateSidebarUserInfo() {
+  if (!currentUser) return;
+  
+  const avatar = document.getElementById('sidebarAvatar');
+  const username = document.getElementById('sidebarUsername');
+  const location = document.getElementById('sidebarLocation');
+  const badge = document.getElementById('sidebarNotifBadge');
+  
+  if (avatar && currentUser.name) {
+    avatar.textContent = currentUser.name.charAt(0).toUpperCase();
+  }
+  
+  if (username && currentUser.name) {
+    username.textContent = currentUser.name;
+  }
+  
+  if (location && currentUser.location) {
+    location.textContent = currentUser.location;
+  }
+  
+  // Sync notification badge
+  const mainBadge = document.getElementById('notifBadge');
+  if (badge && mainBadge) {
+    badge.textContent = mainBadge.textContent;
+    if (mainBadge.classList.contains('show')) {
+      badge.style.display = 'block';
+    } else {
+      badge.style.display = 'none';
+    }
+  }
+}
+
+function closeSidebarAndShow(screenId) {
+  toggleHamburgerMenu();
+  setTimeout(() => {
+    showScreen(screenId);
+  }, 300);
+}
+
+function scrollToSection(sectionId) {
+  toggleHamburgerMenu();
+  setTimeout(() => {
+    const section = document.getElementById(sectionId);
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, 300);
+}
+
+function closeSidebarAndNotification() {
+  toggleHamburgerMenu();
+  setTimeout(() => {
+    toggleNotificationPanel();
+  }, 300);
+}
 
 </script>
 
