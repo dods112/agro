@@ -2750,30 +2750,19 @@ hour12: true
 // Update user initial
 // Update user initial and display
 function updateUserDisplay() {
-if (!currentUser) {
-console.warn('No current user');
-return;
-}
-
+if (currentUser && currentUser.name) {
+const initial = currentUser.name.charAt(0).toUpperCase();
 const initialEl = document.getElementById('userInitial');
 const usernameEl = document.getElementById('headerUsername');
-const farmerNameEl = document.getElementById('farmerName');
-const farmerLocationEl = document.getElementById('farmerLocation');
 
-if (currentUser.name && initialEl) {
-initialEl.textContent = currentUser.name.charAt(0).toUpperCase();
+if (initialEl) {
+initialEl.textContent = initial;
 }
 
 if (usernameEl) {
-usernameEl.textContent = currentUser.username || currentUser.name || 'User';
+// Display the username from registration
+usernameEl.textContent = currentUser.username || currentUser.name;
 }
-
-if (farmerNameEl && currentUser.name) {
-farmerNameEl.textContent = currentUser.name;
-}
-
-if (farmerLocationEl && currentUser.location) {
-farmerLocationEl.textContent = currentUser.location;
 }
 }
 
@@ -3723,7 +3712,6 @@ let geocodedLocationName = null; // store human-readable name from geocoding
 function showScreen(screenId) {
 const screens = document.querySelectorAll('.screen');
 if (!screens || screens.length === 0) {
-console.warn('No screens found');
 return;
 }
 
@@ -3736,15 +3724,33 @@ s.classList.remove('active');
 const targetScreen = document.getElementById(screenId);
 if (targetScreen && targetScreen.classList) {
 targetScreen.classList.add('active');
+}
+
+if (typeof updateAudioOnScreenChange === 'function') {
+updateAudioOnScreenChange();
+}
+}
+
+const targetScreen = document.getElementById(screenId);
+console.log('Target screen:', targetScreen);
+  
+if (targetScreen && targetScreen.classList) {
+targetScreen.classList.add('active');
+console.log('Screen activated:', screenId);
 } else {
-console.error(`Screen not found: ${screenId}`);
+console.error('Screen not found: ' + screenId);
+// Fallback to start screen
+const startScreen = document.getElementById('startScreen');
+if (startScreen) {
+startScreen.classList.add('active');
+}
 }
 
 // Keep audio behavior in sync with current screen
 if (typeof updateAudioOnScreenChange === 'function') {
 updateAudioOnScreenChange();
 }
-}
+
 
 // Authentication
 async function handleSignup(e) {
