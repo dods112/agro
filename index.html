@@ -1468,6 +1468,7 @@ right: -100%;
 </nav>
 
   <!-- ADD THIS NEW GAMES SECTION -->
+<!-- GAMES SECTION -->
   <div class="sidebar-games">
     <div class="games-header">
       <span class="sidebar-icon">🎮</span>
@@ -1475,7 +1476,7 @@ right: -100%;
     </div>
     
     <a href="#" class="game-item" onclick="openGrowtopia(); return false;">
-      <img src="https://play-lh.googleusercontent.com/8ddL1kuoNUB5vUvgDVjYY3_6HwQcrg1K2fd_R8soD-e2QYj8fT9cfhfh3G0hnSruLKec=w240-h480" alt="Growtopia" class="game-icon">
+      <img src="https://i.imgur.com/YOUR_GROWTOPIA_IMAGE.png" alt="Growtopia" class="game-icon">
       <div class="game-info">
         <div class="game-name">Growtopia</div>
         <div class="game-desc">Sandbox MMO Game</div>
@@ -1484,7 +1485,9 @@ right: -100%;
     </a>
     
     <a href="#" class="game-item" onclick="openBreaworld(); return false;">
-      <img src="https://play-lh.googleusercontent.com/kCJ8hR8bF8SL9FkJ7LZb0xoJm6p9K7mKj8vKj4vKj4vKj4vKj4vKj4vKj4vKj4vKj4=w240-h480" alt="Breaworld" class="game-icon" onerror="this.src='https://via.placeholder.com/80?text=BW'">
+      <div class="game-icon game-icon-placeholder">
+        <span style="font-size: 1.5rem; color: #718096;">BW</span>
+      </div>
       <div class="game-info">
         <div class="game-name">Breaworld</div>
         <div class="game-desc">Adventure Game</div>
@@ -2346,6 +2349,11 @@ flex: 1 1 calc(33.33% - 6px);
 .game-item:hover .game-arrow {
   transform: translateX(5px);
   color: var(--primary);
+}
+
+.game-icon-placeholder {
+  background: linear-gradient(135deg, #2d3748, #1a202c);
+  border: 2px solid #4a5568;
 }
 
 </style>
