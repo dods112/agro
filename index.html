@@ -1465,6 +1465,33 @@ right: -100%;
       <span class="sidebar-badge" id="sidebarNotifBadge">0</span>
     </a>
   </nav>
+</nav>
+
+  <!-- ADD THIS NEW GAMES SECTION -->
+  <div class="sidebar-games">
+    <div class="games-header">
+      <span class="sidebar-icon">🎮</span>
+      <span>Recommended Games</span>
+    </div>
+    
+    <a href="#" class="game-item" onclick="openGrowtopia(); return false;">
+      <img src="https://play-lh.googleusercontent.com/8ddL1kuoNUB5vUvgDVjYY3_6HwQcrg1K2fd_R8soD-e2QYj8fT9cfhfh3G0hnSruLKec=w240-h480" alt="Growtopia" class="game-icon">
+      <div class="game-info">
+        <div class="game-name">Growtopia</div>
+        <div class="game-desc">Sandbox MMO Game</div>
+      </div>
+      <span class="game-arrow">→</span>
+    </a>
+    
+    <a href="#" class="game-item" onclick="openBreaworld(); return false;">
+      <img src="https://play-lh.googleusercontent.com/kCJ8hR8bF8SL9FkJ7LZb0xoJm6p9K7mKj8vKj4vKj4vKj4vKj4vKj4vKj4vKj4vKj4=w240-h480" alt="Breaworld" class="game-icon" onerror="this.src='https://via.placeholder.com/80?text=BW'">
+      <div class="game-info">
+        <div class="game-name">Breaworld</div>
+        <div class="game-desc">Adventure Game</div>
+      </div>
+      <span class="game-arrow">→</span>
+    </a>
+  </div>
 
   <div class="sidebar-footer">
    <a href="#" class="sidebar-nav-item" onclick="event.preventDefault(); refreshDashboard(event); toggleHamburgerMenu();">
@@ -2246,6 +2273,81 @@ flex: 1 1 calc(50% - 4px);
 flex: 1 1 calc(33.33% - 6px);
 }
 }
+
+/* Games Section Styling */
+.sidebar-games {
+  border-top: 1px solid var(--border);
+  padding: 16px 0;
+  background: var(--bg-light);
+}
+
+.games-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.game-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border-left: 3px solid transparent;
+}
+
+.game-item:hover {
+  background: rgba(34, 197, 94, 0.1);
+  border-left-color: var(--primary);
+}
+
+.game-item:active {
+  background: rgba(34, 197, 94, 0.2);
+}
+
+.game-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  object-fit: cover;
+  border: 1px solid var(--border);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.game-info {
+  flex: 1;
+}
+
+.game-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+
+.game-desc {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.game-arrow {
+  font-size: 1.2rem;
+  color: var(--text-muted);
+  transition: transform 0.3s ease;
+}
+
+.game-item:hover .game-arrow {
+  transform: translateX(5px);
+  color: var(--primary);
+}
+
 </style>
 
 <!-- Welcome Page -->
@@ -2773,6 +2875,58 @@ function closeSidebarAndNotification() {
   setTimeout(() => {
     toggleNotificationPanel();
   }, 300);
+}
+
+// ===== GAME LINK FUNCTIONS =====
+
+function openGrowtopia() {
+  // Close sidebar
+  toggleHamburgerMenu();
+  
+  // Detect device
+  const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+  
+  if (/android/i.test(userAgent)) {
+    // Android - Try to open app, fallback to Play Store
+    window.location.href = 'com.rtsoft.growtopia://';
+    setTimeout(() => {
+      window.location.href = 'https://play.google.com/store/apps/details?id=com.rtsoft.growtopia';
+    }, 500);
+  } else if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+    // iOS - Try to open app, fallback to App Store
+    window.location.href = 'growtopia://';
+    setTimeout(() => {
+      window.location.href = 'https://apps.apple.com/app/growtopia/id490866006';
+    }, 500);
+  } else {
+    // Desktop - Open Steam or website
+    window.open('https://store.steampowered.com/app/251570/Growtopia/', '_blank');
+  }
+}
+
+function openBreaworld() {
+  // Close sidebar
+  toggleHamburgerMenu();
+  
+  // Detect device
+  const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+  
+  if (/android/i.test(userAgent)) {
+    // Android - Update with actual package name when available
+    window.location.href = 'com.breaworld.game://';
+    setTimeout(() => {
+      window.location.href = 'https://play.google.com/store/search?q=breaworld&c=apps';
+    }, 500);
+  } else if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+    // iOS - Update with actual app scheme when available
+    window.location.href = 'breaworld://';
+    setTimeout(() => {
+      window.location.href = 'https://apps.apple.com/search?term=breaworld';
+    }, 500);
+  } else {
+    // Desktop - Open website or search
+    window.open('https://www.google.com/search?q=Breaworld+game', '_blank');
+  }
 }
 
 </script>
