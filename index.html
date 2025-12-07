@@ -1605,7 +1605,7 @@ right: -100%;
   border: 2px solid var(--border);
   border-radius: 12px;
   cursor: pointer;
-  display: none !important; /* Always hidden by default */
+  display: none;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -1826,7 +1826,7 @@ body:has(#dashboardScreen.active) .hamburger-btn {
     z-index: 10002;
   }
   
-  .sidebar-menu {
+ .sidebar-menu {
     width: 85%;
     left: -85%;
   }
@@ -3321,6 +3321,7 @@ updateMusicIcons();
 // Initialize on dashboard load
 // Combined showDashboard wrapper
 // Combined showDashboard wrapper
+// Combined showDashboard wrapper
 const originalShowDashboard = window.showDashboard;
 window.showDashboard = function() {
   originalShowDashboard();
@@ -3331,11 +3332,11 @@ window.showDashboard = function() {
   // Update time every minute
   setInterval(updateDateTime, 60000);
   
-  // Show hamburger menu ONLY on mobile
+  // Show hamburger menu on ALL screen sizes
   setTimeout(() => {
     const hamburgerBtn = document.getElementById('hamburgerBtn');
-    if (hamburgerBtn && window.innerWidth <= 768) {
-      hamburgerBtn.style.display = 'flex';
+    if (hamburgerBtn) {
+      hamburgerBtn.style.display = 'flex'; // Remove the width check
     }
     updateSidebarUserInfo();
   }, 100);
