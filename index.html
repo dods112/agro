@@ -2495,6 +2495,7 @@ submitBtn.innerHTML = originalText;
 </script>
 
 <!-- Dashboard Screen -->
+ <div id="dashboardScreen" class="screen">
 <audio id="bgAudio" loop preload="metadata" aria-hidden="true">
 <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
 Your browser does not support the audio element.
@@ -2606,6 +2607,7 @@ Your browser does not support the audio element.
 </div>
 
 <style>
+
 .user-profile-card:hover {
 background: var(--panel);
 transform: translateY(-2px);
@@ -3848,7 +3850,13 @@ showScreen('startScreen');
 }
 
 function showDashboard() {
-// Wait for DOM to be ready
+console.log('showDashboard called');
+console.log('Current user:', currentUser);
+
+// First, show the dashboard screen
+showScreen('dashboardScreen');
+
+// Then update user information after a short delay
 setTimeout(() => {
 const farmerNameEl = document.getElementById('farmerName');
 const farmerLocationEl = document.getElementById('farmerLocation');
@@ -3868,14 +3876,21 @@ if (userInitialEl && currentUser && currentUser.name) {
 userInitialEl.textContent = currentUser.name.charAt(0).toUpperCase();
 }
 
-showScreen('dashboardScreen');
+// Load dashboard data
 loadDashboardData();
 
 // Initialize notifications
 updateNotificationBadge();
 setInterval(updateNotificationBadge, 30000);
-}, 50);
+
+// Show music controls
+const floatingBtn = document.getElementById('musicFloatingBtn');
+if (floatingBtn) {
+floatingBtn.style.display = 'flex';
 }
+}, 100);
+}
+
 // Geocode city name to coordinates using Nominatim (forward geocode)
 async function geocodeCity(city) {
 if (!city) throw new Error('City is empty');
