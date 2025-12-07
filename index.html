@@ -1474,7 +1474,19 @@ right: -100%;
       <span class="sidebar-icon">🎮</span>
       <span>Recommended Games</span>
     </div>
-    
+  
+<a href="#" class="game-item" onclick="openMinecraft(); return false;">
+  <img src="https://i.imgur.com/etrOqBd.png" alt="Minecraft" class="game-icon" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+  <div class="game-icon game-icon-placeholder" style="display: none; background: linear-gradient(135deg, #8B4513, #654321);">
+    <span style="font-size: 1.5rem; color: white; font-weight: bold;">MC</span>
+  </div>
+  <div class="game-info">
+    <div class="game-name">Minecraft</div>
+    <div class="game-desc">Sandbox Building Game</div>
+  </div>
+  <span class="game-arrow">→</span>
+</a>
+
 <a href="#" class="game-item" onclick="openGrowtopia(); return false;">
   <img src="https://i.imgur.com/0cz5k5o.jpeg" alt="Growtopia" class="game-icon" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
   <div class="game-icon game-icon-placeholder" style="display: none;">
@@ -2939,6 +2951,31 @@ function openBreaworld() {
   } else {
     // Desktop - Open official Breaworld website
     window.open('https://breaworldsgame.com/', '_blank');
+  }
+}
+
+function openMinecraft() {
+  // Close sidebar
+  toggleHamburgerMenu();
+  
+  // Detect device
+  const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+  
+  if (/android/i.test(userAgent)) {
+    // Android - Try to open app, fallback to Play Store
+    window.location.href = 'minecraft://';
+    setTimeout(() => {
+      window.location.href = 'https://play.google.com/store/apps/details?id=com.mojang.minecraftpe';
+    }, 500);
+  } else if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+    // iOS - Try to open app, fallback to App Store
+    window.location.href = 'minecraft://';
+    setTimeout(() => {
+      window.location.href = 'https://apps.apple.com/app/minecraft/id479516143';
+    }, 500);
+  } else {
+    // Desktop - Open Minecraft website
+    window.open('https://www.minecraft.net/', '_blank');
   }
 }
 
