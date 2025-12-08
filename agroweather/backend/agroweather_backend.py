@@ -1162,7 +1162,7 @@ async def get_all_users(user: dict = Depends(get_current_user)):
         if user_dict.get('last_seen'):
             last_seen = datetime.fromisoformat(user_dict['last_seen'])
             diff_minutes = (now - last_seen).total_seconds() / 60
-            user_dict['is_online'] = diff_minutes < 
+            user_dict['is_online'] = diff_minutes < 1
         else:
             user_dict['is_online'] = False
             
